@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+        }
+        .main{
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-box {
+            width: 500px;
+            height: 600px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* CSS cho các tin nhắn */
+        .message {
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* CSS cho tin nhắn đến */
+        .received {
+            text-align: left;
+        }
+
+        /* CSS cho tin nhắn đi */
+        .sent {
+            text-align: left;
+        }
+
+        /* CSS cho nút gửi tin nhắn */
+        .send-button {
+            margin-top: 10px;
+            text-align: center;
+
+        }
+        input{
+            width: 500px;
+            height: 50px;
+            font-size: 20px;
+        }
+        button{
+            padding: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="chat-box">
+            <div class="message received" id="received"></div>
+            <div class="message sent" id="sent"></div>
+        </div>
+        <div class="send-button">
+            <input type="text" id="message" placeholder="Nhập tin nhắn...">
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+</body>
+<!-- <script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:4000');
+
+    function sendMessage() {
+        const messageInput = document.getElementById('message');
+        const messageText = messageInput.value;
+        const messageReceived = document.getElementById('received');
+        messageReceived.innerText = messageText
+        if (messageText) {
+            socket.emit('message', messageText);
+            messageInput.value = '';
+        }
+    }
+
+    socket.on('message', (msg) => {
+        const messageSent = document.getElementById('sent');
+        messageSent.innerText += msg;
+    })
+
+    const messageInput = document.getElementById('message');
+    let receivedDiv = document.getElementById('received');
+    let sentDiv = document.getElementById('sent');
+    messageInput.addEventListener('input', () => {
+        receivedDiv.innerText = '';
+        sentDiv.innerText = '';
+    });
+</script>
+
+</html>
